@@ -52,37 +52,35 @@ function setup() {
       let offsetY = random(-targetPad.size / 4, targetPad.size / 4);
 
       return {
-        x: random(-100, -50), // Start off-screen
+        x: random(-100, -50),
         y: random(height),
         startX: random(-100, -50),
         startY: random(height),
-        targetX: targetPad.x + offsetX, // Centered on lily pad
-        targetY: targetPad.y + offsetY, // Centered on lily pad
-        headSize: 10,
-        bodyWidth: 15,
-        bodyHeight: 10,
+        targetX: targetPad.x + offsetX,
+        targetY: targetPad.y + offsetY,
+        headSize: 10, // Initialize based on acceleration; updated in draw
+        bodyWidth: 15, // Initialize based on speed; updated in draw
+        bodyHeight: 10, // Constant height
         power: row.getNum('Power'),
+        acceleration: row.getNum('Acceleration'),
+        speed: row.getNum('Speed'),
         jumpHeight: 350,
         progress: 0,
-        speed: 0.03,
-        jumpDelay: random(10, 800), // Delay in frames
-        startJumpFrame: frameCount + random(10, 1000), // New property to hold start time
-
+        speedIncrease: 0.03,
+        jumpDelay: random(10, 800),
+        startJumpFrame: frameCount + random(10, 1000),
         jump: function () {
           if (frameCount >= this.startJumpFrame && this.progress < 1) {
-            this.progress += this.speed;
-
+            this.progress += this.speedIncrease;
             let sineValue = Math.pow(Math.sin(Math.PI * this.progress), 2);
             this.y = this.linearInterpolate(this.startY, this.targetY, this.progress) - sineValue * this.jumpHeight * (1 - this.progress);
             this.x = this.linearInterpolate(this.startX, this.targetX, this.progress);
-
             if (this.progress >= 1) {
               this.x = this.targetX;
               this.y = this.targetY;
             }
           }
         },
-
         linearInterpolate: function (start, end, t) {
           return start + (end - start) * t;
         }
@@ -91,6 +89,7 @@ function setup() {
     return null;
   }).filter(frog => frog !== null);
 }
+
 
 let jumpStartFrame = 0; // Track when jumping starts
 
@@ -131,12 +130,7 @@ function drawLilyPad(x, y, size, angle) {
 }
 
 function draw() {
-  background('#174991'); // Set to a pleasant blue color, adjust the code for different shades
-
-  noStroke();
-  let hoverText = null;
-  let hoverPad = null;
-
+  background('#174991');
   lilyPads.forEach(pad => {
     push();
     translate(pad.x, pad.y);
@@ -148,33 +142,38 @@ function draw() {
     if (isMouseOverLilyPad(pad)) {
       fill(0);
       noStroke();
-      textSize(18);
+      textSize(14);
       textAlign(CENTER, TOP);
-      let textY = pad.y + pad.size / 10 + 10; // Position the text 10 pixels below the lily pad
-      text(pad.generation, pad.x, pad.y);
+      text(pad.generation, pad.x, pad.y + pad.size / 2 + 1);  // Ensure text appears below the lily pad
     }
   });
 
   frogs.forEach(frog => {
-    frog.jump(); // Adjusted to check startJumpFrame internally
-
+    frog.jump();
     if (jumpStarted) {
-      let shadowOffsetX = 12;
-      let shadowOffsetY = 13;
+      // Updating dimensions based on frog data
+      frog.headSize = map(frog.acceleration, 0, 15, 10, 30); // Mapping head size
+      frog.bodyWidth = map(frog.speed, 200, 350, 10, 30); // Mapping body width for speed
 
-      // FROG SHADOW
-      fill(0, 0, 0, 200); // Shadow color
-      ellipse(frog.x + shadowOffsetX, frog.y + shadowOffsetY, frog.bodyWidth, frog.headSize + frog.bodyHeight);
-
-      // FROG
       let headX = frog.x + (frog.bodyWidth - frog.headSize) / 2;
-      fill('#008000'); // Head color
-      rect(headX, frog.y, frog.headSize, frog.headSize); // Head
-      fill('#228B22'); // Body Color
-      rect(frog.x, frog.y + frog.headSize, frog.bodyWidth, frog.bodyHeight); // Body
-      fill('#323232'); // Eyes color
-      ellipse(headX, frog.y, Math.max(frog.power * 0.05, 1), Math.max(frog.power * 0.05, 1)); // Eyes
-      ellipse(headX + frog.headSize, frog.y, Math.max(frog.power * 0.05, 1), Math.max(frog.power * 0.05, 1));
+
+      // Frog shadow
+      fill(0, 0, 0, 200);
+      ellipse(frog.x + 5, frog.y + 18, frog.bodyWidth, frog.headSize + frog.bodyHeight);
+
+      // Frog head
+      fill('#008000');
+      rect(headX, frog.y, frog.headSize, frog.headSize);
+
+      // Frog body
+      fill('#228B22');
+      rect(frog.x, frog.y + frog.headSize, frog.bodyWidth, frog.bodyHeight);
+
+      // Frog eyes
+      let eyeSize = Math.max(frog.power * 0.05, 1);
+      fill('#323232');
+      ellipse(headX, frog.y, eyeSize, eyeSize);
+      ellipse(headX + frog.headSize, frog.y, eyeSize, eyeSize);
     }
   });
 
