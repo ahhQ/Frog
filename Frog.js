@@ -199,13 +199,13 @@ function drawLegend() {
 
   // Displaying legend items for Speed
   fill('#000')
-  text('Speed', legendLeft + 30, legendTop + 22);
+  text('Acceleration', legendLeft + 30, legendTop + 22);
   fill('#008000'); // Color for speed
   rect(legendLeft, legendTop + 20, 15, 15); // Rectangle for speed
 
   // Displaying legend items for Acceleration
   fill('#000')
-  text('Acceleration', legendLeft + 30, legendTop + 42);
+  text('Speed', legendLeft + 30, legendTop + 42);
   fill('#228B22'); // Green color for acceleration
   rect(legendLeft, legendTop + 42, 20, 12); // Rectangle for acceleration (not a square)
 }
