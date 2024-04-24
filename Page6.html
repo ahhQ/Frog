@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Porsche 911 Frogs Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <!-- Link to your sketch.js file -->
+    <script src="Frog.js" defer></script>
+</head>
+<style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Prevents scrollbars from appearing */
+    }
+    canvas {
+      display: block; /* Removes potential extra space below the canvas */
+    }
+  </style>
+<body>
+  <script>
+    document.body.addEventListener('keydown', function(event) {
+        if (event.keyCode === 32) {  // 32 is the keycode for the space bar
+            event.preventDefault();  // Prevent the default space bar scroll behavior
+            window.location.href = 'Page7.html';  // Change 'page2.html' to your second page's URL
+        }
+    });
+</script>
+</body>
+</html>
