@@ -35,9 +35,13 @@ function setup() {
 
 function draw() {
   background(255);
-  fill('#0db14b');
-  noStroke();
+  displayFrogs();
+  drawLegend();
+  displayHoverData();
+}
 
+function displayFrogs() {
+  noStroke();
   frogs.forEach(frog => {
     let headX = frog.x + (frog.bodyWidth - frog.headSize) / 2;
     fill('#008000'); // Head color
@@ -50,24 +54,44 @@ function draw() {
     ellipse(headX + frog.headSize, frog.y, Math.max(frog.power * 0.07, 2), Math.max(frog.power * 0.07, 2)); // Right Eye
     fill('#0db14b'); // Reset color for the next frog
   });
+}
 
-  displayHoverData();
+function drawLegend() {
+  const legendTop = height - 1630;
+  const legendLeft = width - 500; // Adjust width for horizontal layout
+
+  fill(0);
+  textSize(12);
+  textAlign(LEFT, TOP);
+
+  text('Power', legendLeft + 160, legendTop + 12);
+  fill('#000000');
+  ellipse(legendLeft + 140, legendTop + 18, 7, 7);
+  ellipse(legendLeft + 150, legendTop + 18, 7, 7);
+
+  text('Acceleration', legendLeft + 255, legendTop + 12);
+  fill('#008000');
+  rect(legendLeft + 230, legendTop + 10, 15, 15);
+
+  fill('#000')
+  text('Speed', legendLeft + 380, legendTop + 12);
+  fill('#228B22');
+  rect(legendLeft + 350, legendTop + 11, 20, 12);
 }
 
 function displayHoverData() {
+  textSize(12);
   frogs.forEach(frog => {
     let headX = frog.x + (frog.bodyWidth - frog.headSize) / 2;
-    // Check if mouse is over the frog's body or head
     if (mouseX >= headX && mouseX <= headX + frog.headSize && mouseY >= frog.y && mouseY <= frog.y + frog.headSize + frog.bodyHeight ||
         mouseX >= frog.x && mouseX <= frog.x + frog.bodyWidth && mouseY >= frog.y + frog.headSize && mouseY <= frog.y + frog.headSize + frog.bodyHeight) {
       fill(0);
-      textSize(12);
       text(`Speed (km/h): ${frog.speed}, Acceleration 0-100km/h (s): ${frog.acceleration}, Power/Liter: ${frog.power}`, mouseX + 15, mouseY - 15);
-      textSize(8); // Reset text size for other elements
     }
   });
+  textSize(8); // Reset text size after displaying hover data
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, 1660); // Keep the canvas height constant on resize
+  resizeCanvas(windowWidth, 1660);
 }
