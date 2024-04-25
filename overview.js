@@ -56,29 +56,6 @@ function displayFrogs() {
   });
 }
 
-function drawLegend() {
-  const legendTop = height - 1630;
-  const legendLeft = width - 500; // Adjust width for horizontal layout
-
-  fill(0);
-  textSize(12);
-  textAlign(LEFT, TOP);
-
-  text('Power', legendLeft + 160, legendTop + 12);
-  fill('#000000');
-  ellipse(legendLeft + 140, legendTop + 18, 7, 7);
-  ellipse(legendLeft + 150, legendTop + 18, 7, 7);
-
-  text('Acceleration', legendLeft + 255, legendTop + 12);
-  fill('#008000');
-  rect(legendLeft + 230, legendTop + 10, 15, 15);
-
-  fill('#000')
-  text('Speed', legendLeft + 380, legendTop + 12);
-  fill('#228B22');
-  rect(legendLeft + 350, legendTop + 11, 20, 12);
-}
-
 function displayHoverData() {
   textSize(12);
   frogs.forEach(frog => {
